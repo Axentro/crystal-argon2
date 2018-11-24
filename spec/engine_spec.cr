@@ -4,6 +4,19 @@ describe Argon2::Engine do
   password = "password"
   salt = "somesalt\0\0\0\0\0\0\0\0"
 
+  describe "generate a salt" do
+    generate = 10.times.map { Argon2::Engine.generate_salt }.to_a
+
+    it "should generate a uniq salt each time with no duplicates" do
+      generate.select { |e| generate.count(e) > 1 }.size.should eq(0)
+    end
+
+    it "should generate a salt of the correct length each time" do
+      generate.reject { |e| e.size == Argon2::DEFAULT_SALT_LEN }.size.should eq(0)
+    end
+
+  end
+
   describe "argon2i" do
     describe "hash_argon2i_raw" do
       it "with 2 iterations and 16 cost" do
@@ -54,6 +67,18 @@ describe Argon2::Engine do
 
       it "with 2 iterations and 16 cost and different salt" do
         Argon2::Engine.hash_argon2i_encode(password, "diffsalt\0\0\0\0\0\0\0\0", 2, 16).should eq("$argon2i$v=19$m=65536,t=2,p=1$ZGlmZnNhbHQAAAAAAAAAAA$u2aGhl8sEJP3D1Q8lTX4B9W0LV3G1x8UpKeikZE+BeA")
+      end
+    end
+
+    describe "argon2i_verify" do
+      it "should return ARGON2_OK when password and encoded string are successfully verified" do
+        result = Argon2::Engine.argon2i_verify("password", "$argon2i$v=19$m=65536,t=1,p=1$c29tZXNhbHQAAAAAAAAAAA$+r0d29hqEB0yasKr55ZgICsQGSkl0v0kgwhd+U3wyRo")
+        result.should eq(Argon2::Response::ARGON2_OK)
+      end
+      it "should return when password and encoded string fail to verify" do
+        expect_raises(Exception, "Error with return code: ARGON2_VERIFY_MISMATCH and value: -35") do
+          Argon2::Engine.argon2i_verify("incorrect", "$argon2i$v=19$m=65536,t=1,p=1$c29tZXNhbHQAAAAAAAAAAA$+r0d29hqEB0yasKr55ZgICsQGSkl0v0kgwhd+U3wyRo")
+        end
       end
     end
   end
@@ -109,6 +134,18 @@ describe Argon2::Engine do
         Argon2::Engine.hash_argon2d_encode(password, "diffsalt\0\0\0\0\0\0\0\0", 2, 16).should eq("$argon2d$v=19$m=65536,t=2,p=1$ZGlmZnNhbHQAAAAAAAAAAA$TY8QN4HDBdUtLmkO/Ma5bDz+IYZQli/grp78T3jrnBo")
       end
     end
+
+    describe "argon2d_verify" do
+      it "should return ARGON2_OK when password and encoded string are successfully verified" do
+        result = Argon2::Engine.argon2d_verify("password", "$argon2d$v=19$m=65536,t=2,p=1$c29tZXNhbHQAAAAAAAAAAA$qtsr/Flc4tpSxVSDXVAVSqYNU8o0aSMPmjrI3GI/opQ")
+        result.should eq(Argon2::Response::ARGON2_OK)
+      end
+      it "should return when password and encoded string fail to verify" do
+        expect_raises(Exception, "Error with return code: ARGON2_VERIFY_MISMATCH and value: -35") do
+          Argon2::Engine.argon2d_verify("incorrect", "$argon2d$v=19$m=65536,t=2,p=1$c29tZXNhbHQAAAAAAAAAAA$qtsr/Flc4tpSxVSDXVAVSqYNU8o0aSMPmjrI3GI/opQ")
+        end
+      end
+    end
   end
 
   describe "argon2id" do
@@ -160,6 +197,18 @@ describe Argon2::Engine do
 
       it "with 2 iterations and 16 cost and different salt" do
         Argon2::Engine.hash_argon2id_encode(password, "diffsalt\0\0\0\0\0\0\0\0", 2, 16).should eq("$argon2id$v=19$m=65536,t=2,p=1$ZGlmZnNhbHQAAAAAAAAAAA$vm1qQXZQ+/MgT2Y+Go7XnxtA9dJz3wotjfg0itOgKlY")
+      end
+    end
+
+    describe "argon2id_verify" do
+      it "should return ARGON2_OK when password and encoded string are successfully verified" do
+        result = Argon2::Engine.argon2id_verify("password", "$argon2id$v=19$m=65536,t=2,p=1$c29tZXNhbHQAAAAAAAAAAA$syf8TzB9pvMIGtFhvRATHW1nX43iP+FLaaTXnqpyMrY")
+        result.should eq(Argon2::Response::ARGON2_OK)
+      end
+      it "should return when password and encoded string fail to verify" do
+        expect_raises(Exception, "Error with return code: ARGON2_VERIFY_MISMATCH and value: -35") do
+          Argon2::Engine.argon2id_verify("incorrect", "$argon2id$v=19$m=65536,t=2,p=1$c29tZXNhbHQAAAAAAAAAAA$syf8TzB9pvMIGtFhvRATHW1nX43iP+FLaaTXnqpyMrY")
+        end
       end
     end
   end

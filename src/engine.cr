@@ -69,6 +69,30 @@ module Argon2
       encoded_hash(EngineType::ARGON2ID, password, salt, t_cost, m_cost)
     end
 
+    # Verifies a password using Argon2i against an encoded string
+    # @param password string
+    # @param encoded string (output from has_argon2i_encode)
+    # Returns ARGON2_OK if successful
+    def self.argon2i_verify(password : String, encoded_string : String)
+      encoded_verify(EngineType::ARGON2I, password, encoded_string)
+    end
+
+    # Verifies a password using Argon2d against an encoded string
+    # @param password string
+    # @param encoded string (output from has_argon2d_encode)
+    # Returns ARGON2_OK if successful
+    def self.argon2d_verify(password : String, encoded_string : String)
+      encoded_verify(EngineType::ARGON2D, password, encoded_string)
+    end
+
+    # Verifies a password using Argon2id against an encoded string
+    # @param password string
+    # @param encoded string (output from has_argon2id_encode)
+    # Returns ARGON2_OK if successful
+    def self.argon2id_verify(password : String, encoded_string : String)
+      encoded_verify(EngineType::ARGON2ID, password, encoded_string)
+    end
+
     def self.raw_hash(engine_type : EngineType, password : String, salt : String, t_cost : Int32, m_cost : Int32)
       iterations = t_cost
       memory = m_cost
@@ -80,12 +104,11 @@ module Argon2
 
       case engine_type
       when EngineType::ARGON2I
-        res = Argon2::Response.new(LibArgon2.argon2i_hash_raw(iterations, 1 << memory, parallelism, password, password_len, salt, salt_len, hash, hash_len))
-        raise "Error with return code: #{res.value}" if res != Argon2::Response::ARGON2_OK
+        handle_error Argon2::Response.new(LibArgon2.argon2i_hash_raw(iterations, 1 << memory, parallelism, password, password_len, salt, salt_len, hash, hash_len))
       when EngineType::ARGON2D
-        LibArgon2.argon2d_hash_raw(iterations, 1 << memory, parallelism, password, password_len, salt, salt_len, hash, hash_len)
+        handle_error Argon2::Response.new(LibArgon2.argon2d_hash_raw(iterations, 1 << memory, parallelism, password, password_len, salt, salt_len, hash, hash_len))
       else
-        LibArgon2.argon2id_hash_raw(iterations, 1 << memory, parallelism, password, password_len, salt, salt_len, hash, hash_len)
+        handle_error Argon2::Response.new(LibArgon2.argon2id_hash_raw(iterations, 1 << memory, parallelism, password, password_len, salt, salt_len, hash, hash_len))
       end
       hash.hexstring
     end
@@ -102,15 +125,31 @@ module Argon2
 
       case engine_type
       when EngineType::ARGON2I
-        LibArgon2.argon2i_hash_encoded(iterations, 1 << memory, parallelism, password, password_len, salt, salt_len, hash_len, buffer, encoded_len)
+        handle_error Argon2::Response.new(LibArgon2.argon2i_hash_encoded(iterations, 1 << memory, parallelism, password, password_len, salt, salt_len, hash_len, buffer, encoded_len))
       when EngineType::ARGON2D
-        LibArgon2.argon2d_hash_encoded(iterations, 1 << memory, parallelism, password, password_len, salt, salt_len, hash_len, buffer, encoded_len)
+        handle_error Argon2::Response.new(LibArgon2.argon2d_hash_encoded(iterations, 1 << memory, parallelism, password, password_len, salt, salt_len, hash_len, buffer, encoded_len))
       else
-        LibArgon2.argon2id_hash_encoded(iterations, 1 << memory, parallelism, password, password_len, salt, salt_len, hash_len, buffer, encoded_len)
+        handle_error Argon2::Response.new(LibArgon2.argon2id_hash_encoded(iterations, 1 << memory, parallelism, password, password_len, salt, salt_len, hash_len, buffer, encoded_len))
       end
 
       result = String.new(buffer)
       result.delete("\0")
+    end
+
+    def self.encoded_verify(engine_type : EngineType, password : String, encoded_string : String)
+      case engine_type
+      when EngineType::ARGON2I
+        handle_error Argon2::Response.new(LibArgon2.argon2i_verify(encoded_string, password, password.bytesize))
+      when EngineType::ARGON2D
+        handle_error Argon2::Response.new(LibArgon2.argon2d_verify(encoded_string, password, password.bytesize))
+      else
+        handle_error Argon2::Response.new(LibArgon2.argon2id_verify(encoded_string, password, password.bytesize))
+      end
+    end
+
+    private def self.handle_error(return_value : Argon2::Response)
+      raise "Error with return code: #{return_value} and value: #{return_value.value}" if return_value != Argon2::Response::ARGON2_OK
+      return_value
     end
   end
 end

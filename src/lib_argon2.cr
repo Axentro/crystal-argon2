@@ -45,7 +45,18 @@ lib LibArgon2
   # same params as Argon2i
   fun argon2id_hash_encoded(t_cost : LibC::Int, m_cost : LibC::Int, parallelism : LibC::Int, pwd : Void*, pwdlen : LibC::SizeT, salt : Void*, saltlen : LibC::SizeT, hashlen : LibC::SizeT, encoded : LibC::Char*, encodedlen : LibC::SizeT) : LibC::Int
 
+  # Verifies a password using Argon2i against an encoded string
+  # Encoded string is restricted as in validate_inputs()
+  # @param encoded String encoding parameters, salt, hash
+  # @param pwd Pointer to password
+  # Returns ARGON2_OK if successful
   fun argon2i_verify(encoded : LibC::Char*, pwd : Void*, pwdlen : LibC::SizeT) : LibC::Int
+
+  # Verifies a password using Argon2d against an encoded string
+  # same params as Argon2i
   fun argon2d_verify(encoded : LibC::Char*, pwd : Void*, pwdlen : LibC::SizeT) : LibC::Int
+
+  # Verifies a password using Argon2id against an encoded string
+  # same params as Argon2i
   fun argon2id_verify(encoded : LibC::Char*, pwd : Void*, pwdlen : LibC::SizeT) : LibC::Int
 end
