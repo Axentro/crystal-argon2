@@ -1,5 +1,7 @@
 # crystal-argon2
 
+[![Build Status](https://www.travis-ci.org/SushiChain/crystal-argon2.svg?branch=master)](https://www.travis-ci.org/SushiChain/crystal-argon2)
+
 This Crystal shard provides C bindings, and a simplified interface, to the Argon2 algorithm. [Argon2](https://github.com/P-H-C/phc-winner-argon2) is the official winner of the Password Hashing Competition, a several year project to identify a successor to bcrypt/PBKDF/scrypt methods of securely storing passwords. This is an independent project and not official from the PHC team.
 
 This project is mostly a clone of this awesome ruby project [technion/ruby-argon2](https://github.com/technion/ruby-argon2)
