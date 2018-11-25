@@ -46,6 +46,10 @@ describe Argon2::Engine do
       it "with 2 iterations and 16 cost and different salt" do
         Argon2::Engine.hash_argon2i_raw(password, "diffsalt\0\0\0\0\0\0\0\0", 2, 16).should eq("bb6686865f2c1093f70f543c9535f807d5b42d5dc6d71f14a4a7a291913e05e0")
       end
+
+      it "should return the buffer for raw_hash_buffer" do
+        Argon2::Engine.raw_hash_buffer(Argon2::Engine::EngineType::ARGON2I, password, salt, 2, 16).should eq(Bytes[28, 126, 238, 249, 224, 233, 105, 179, 2, 71, 34, 252, 134, 74, 28, 169, 246, 202, 32, 218, 115, 249, 191, 63, 23, 49, 136, 27, 234, 226, 3, 158])
+      end
     end
 
     describe "hash_argon2i_encode" do

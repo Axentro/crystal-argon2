@@ -93,14 +93,14 @@ module Argon2
       encoded_verify(EngineType::ARGON2ID, password, encoded_string)
     end
 
-    def self.raw_hash(engine_type : EngineType, password : String, salt : String, t_cost : Int32, m_cost : Int32)
+    def self.raw_hash_buffer(engine_type : EngineType, password : String, salt : String, t_cost : Int32, m_cost : Int32, out_len : Int32 = OUT_LEN)
       iterations = t_cost
       memory = m_cost
       parallelism = 1
       password_len = password.bytesize
       salt_len = salt.bytesize
-      hash = Slice(UInt8).new(OUT_LEN)
-      hash_len = OUT_LEN
+      hash = Slice(UInt8).new(out_len)
+      hash_len = out_len
 
       case engine_type
       when EngineType::ARGON2I
@@ -110,7 +110,11 @@ module Argon2
       else
         handle_error Argon2::Response.new(LibArgon2.argon2id_hash_raw(iterations, 1 << memory, parallelism, password, password_len, salt, salt_len, hash, hash_len))
       end
-      hash.hexstring
+      hash
+    end
+
+    def self.raw_hash(engine_type : EngineType, password : String, salt : String, t_cost : Int32, m_cost : Int32)
+      raw_hash_buffer(engine_type, password, salt, t_cost, m_cost, OUT_LEN).hexstring
     end
 
     def self.encoded_hash(engine_type : EngineType, password : String, salt : String, t_cost : Int32, m_cost : Int32)
