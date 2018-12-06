@@ -68,6 +68,37 @@ Argon2::Password.verify_password("password", secure_password)
 * build the C library `cd ext && make`
 * run specs: `crystal spec`
 
+## Using crystal_lib
+
+To generate the initial crystal bindings using this library:
+
+* git clone https://github.com/crystal-lang/crystal_lib.git
+* download the argon2 code from here [https://github.com/P-H-C/phc-winner-argon2/releases](https://github.com/P-H-C/phc-winner-argon2/releases)
+* use `make` to build the argon2 code
+* create a crystal bindings file for argon2 that will be run from crystal_lib (see below)
+* export LLVM_CONFIG=/usr/local/opt/llvm/bin/llvm-config (use the correct path for your LLVM install)
+* crystal run src/main.cr -- path/to/argon2_bindings.cr
+
+#### argon2_bindings.cr example
+
+```crystal
+# export LLVM_CONFIG=/usr/local/opt/llvm/bin/llvm-config
+@[Include("../phc-winner-argon2/include/argon2.h")]
+@[Link("argon2")]
+lib LibArgon2
+  fun argon2i_hash_raw
+  fun argon2i_hash_encoded
+  fun argon2d_hash_raw
+  fun argon2d_hash_encoded
+  fun argon2id_hash_raw
+  fun argon2id_hash_encoded
+
+  fun argon2i_verify
+  fun argon2d_verify
+  fun argon2id_verify
+end
+```
+
 ## Contributing
 
 1. Fork it (<https://github.com/sushichain/crystal-argon2/fork>)
