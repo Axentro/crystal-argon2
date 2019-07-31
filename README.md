@@ -57,7 +57,7 @@ Argon2::Password.create("password")
     => "$argon2i$v=19$m=65536,t=2,p=1$61qkSyYNbUgf3kZH3GtHRw$4CQff9AZ0lWd7uF24RKMzqEiGpzhte1Hp8SO7X8bAew"
 ```
 
-You can then use this function to verify a password against a given hash. Will return either true or false.
+You can then use this function to verify a password against a given hash. Will return either `Argon2::Response::ARGON2_OK` for success or raise and exception with then appropriate error code e.g. `ARGON2_VERIFY_MISMATCH`.
 
 ```crystal
 Argon2::Password.verify_password("password", secure_password)
