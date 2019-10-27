@@ -12,7 +12,7 @@ module Argon2
 
     # Generate a random hex salt string - defaults to default length recommended by the argon2 spec
     def self.generate_salt(salt_size = DEFAULT_SALT_LEN)
-      Random::Secure.hex(salt_size / 2)
+      Random::Secure.hex((salt_size / 2).to_i)
     end
 
     # Hashes a password with Argon2i, producing a raw hash

@@ -1,5 +1,5 @@
 name: crystal-argon2
-version: 0.1.0
+version: 0.1.1
 description: Crystal bindings for argon2 hashing library
 
 authors:
@@ -8,6 +8,6 @@ authors:
 scripts:
   postinstall: cd ext && make
 
-crystal: 0.27.0
+crystal: 0.31.1
 
 license: MIT
