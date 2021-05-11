@@ -1,13 +1,13 @@
 name: crystal-argon2
-version: 0.1.2
+version: 0.1.3
 description: Crystal bindings for argon2 hashing library
 
 authors:
-  - Kingsley Hendrickse <kingsley.hendrickse@gmail.com>
+  - Kingsley Hendrickse <kingsley@axentro.io>
 
 scripts:
   postinstall: cd ext && make
 
-crystal: 0.36.1
+crystal: 1.0.0
 
 license: MIT
