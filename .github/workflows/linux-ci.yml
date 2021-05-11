@@ -27,6 +27,9 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v2
 
+      - name: Make argon2
+      - run: cd ext && make   
+
       - name: Install shards
         run: shards install --ignore-crystal-version
 
