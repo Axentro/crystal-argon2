@@ -8,13 +8,13 @@ describe Argon2::Engine do
     generate = 10.times.map { Argon2::Engine.generate_salt }.to_a
 
     it "should generate a uniq salt each time with no duplicates" do
-      generate.select { |e| generate.count(e) > 1 }.size.should eq(0)
+      generate.count { |e| generate.count(e) > 1 }.should eq(0)
     end
 
     it "should generate a salt of the correct length each time" do
-      generate.reject { |e| e.size == Argon2::DEFAULT_SALT_LEN }.size.should eq(0)
+      r = generate.reject { |e| e.size == Argon2::DEFAULT_SALT_LEN }
+      r.size.should eq(0)
     end
-
   end
 
   describe "argon2i" do
