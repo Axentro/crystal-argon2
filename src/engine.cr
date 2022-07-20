@@ -19,7 +19,7 @@ module Argon2
     # @param password string
     # @param salt string
     # @param t_cost Number of iterations
-    # @param m_cost Sets memory usage to m_cost kibibytes
+    # @param m_cost Sets memory usage to two to the m_cost kibibytes
     def self.hash_argon2i_raw(password : String, salt : String, t_cost : Int32, m_cost : Int32)
       raw_hash(EngineType::ARGON2I, password, salt, t_cost, m_cost)
     end
@@ -28,7 +28,7 @@ module Argon2
     # @param password string
     # @param salt string
     # @param t_cost Number of iterations
-    # @param m_cost Sets memory usage to m_cost kibibytes
+    # @param m_cost Sets memory usage to two to the m_cost kibibytes
     def self.hash_argon2i_encode(password : String, salt : String, t_cost : Int32, m_cost : Int32)
       encoded_hash(EngineType::ARGON2I, password, salt, t_cost, m_cost)
     end
@@ -37,7 +37,7 @@ module Argon2
     # @param password string
     # @param salt string
     # @param t_cost Number of iterations
-    # @param m_cost Sets memory usage to m_cost kibibytes
+    # @param m_cost Sets memory usage to two to the m_cost kibibytes
     def self.hash_argon2d_raw(password : String, salt : String, t_cost : Int32, m_cost : Int32)
       raw_hash(EngineType::ARGON2D, password, salt, t_cost, m_cost)
     end
@@ -46,7 +46,7 @@ module Argon2
     # @param password string
     # @param salt string
     # @param t_cost Number of iterations
-    # @param m_cost Sets memory usage to m_cost kibibytes
+    # @param m_cost Sets memory usage to two to the m_cost kibibytes
     def self.hash_argon2d_encode(password : String, salt : String, t_cost : Int32, m_cost : Int32)
       encoded_hash(EngineType::ARGON2D, password, salt, t_cost, m_cost)
     end
@@ -55,7 +55,7 @@ module Argon2
     # @param password string
     # @param salt string
     # @param t_cost Number of iterations
-    # @param m_cost Sets memory usage to m_cost kibibytes
+    # @param m_cost Sets memory usage to two to the m_cost kibibytes
     def self.hash_argon2id_raw(password : String, salt : String, t_cost : Int32, m_cost : Int32)
       raw_hash(EngineType::ARGON2ID, password, salt, t_cost, m_cost)
     end
@@ -64,7 +64,7 @@ module Argon2
     # @param password string
     # @param salt string
     # @param t_cost Number of iterations
-    # @param m_cost Sets memory usage to m_cost kibibytes
+    # @param m_cost Sets memory usage to two to the m_cost kibibytes
     def self.hash_argon2id_encode(password : String, salt : String, t_cost : Int32, m_cost : Int32)
       encoded_hash(EngineType::ARGON2ID, password, salt, t_cost, m_cost)
     end
